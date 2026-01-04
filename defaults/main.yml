@@ -1,0 +1,27 @@
+---
+# Hostname
+common_hostname: "{{ inventory_hostname }}"
+
+# Timezone
+common_timezone: Europe/Moscow
+
+# Locale
+common_locale: en_US.UTF-8
+
+# Deploy profile.d scripts
+common_profile_d: true
+
+# Deploy custom PAM sshd config
+common_pam_sshd: true
+
+# /etc/hosts entries
+common_hosts_entries: []
+#  - ip: 192.168.1.10
+#    hostname: db-server
+#    aliases:
+#      - db
+
+# Sysctl settings
+common_sysctl: {}
+#  net.ipv4.ip_forward: 1
+#  vm.swappiness: 10

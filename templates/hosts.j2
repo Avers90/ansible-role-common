@@ -1,0 +1,17 @@
+# {{ ansible_managed }}
+
+127.0.0.1 localhost
+127.0.1.1 {{ common_hostname }}
+
+# IPv6
+::1 localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+{% if common_hosts_entries | length > 0 %}
+# Custom entries
+{% for entry in common_hosts_entries %}
+{{ entry.ip }} {{ entry.hostname }}{% if entry.aliases is defined %} {{ entry.aliases | join(' ') }}{% endif %}
+
+{% endfor %}
+{% endif %}

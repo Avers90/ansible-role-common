@@ -1,0 +1,74 @@
+---
+- name: Fail if distro is not supported
+  ansible.builtin.fail:
+    msg: "Distribution '{{ ansible_distribution }}' is not supported. Supported: Debian, Ubuntu"
+  when: ansible_distribution not in ['Debian', 'Ubuntu']
+
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ common_hostname }}"
+
+- name: Deploy /etc/hosts
+  ansible.builtin.template:
+    src: hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Set timezone
+  ansible.builtin.timezone:
+    name: "{{ common_timezone }}"
+
+- name: Set locale
+  ansible.builtin.locale_gen:
+    name: "{{ common_locale }}"
+    state: present
+
+- name: Set default locale
+  ansible.builtin.copy:
+    content: |
+      LANG={{ common_locale }}
+      LC_ALL={{ common_locale }}
+    dest: /etc/default/locale
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Deploy profile.d scripts
+  ansible.builtin.copy:
+    src: profile.d/
+    dest: /etc/profile.d/
+    owner: root
+    group: root
+    mode: "0644"
+  when: common_profile_d
+
+- name: Backup original pam.d/sshd
+  ansible.builtin.copy:
+    src: /etc/pam.d/sshd
+    dest: /etc/pam.d/sshd.orig
+    remote_src: true
+    owner: root
+    group: root
+    mode: "0644"
+    force: false
+  when: common_pam_sshd
+
+- name: Deploy custom pam.d/sshd
+  ansible.builtin.copy:
+    src: pam.d/sshd
+    dest: /etc/pam.d/sshd
+    owner: root
+    group: root
+    mode: "0644"
+  when: common_pam_sshd
+
+- name: Apply sysctl settings
+  ansible.posix.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: true
+  loop: "{{ common_sysctl | dict2items }}"
+  when: common_sysctl | length > 0
