@@ -7,13 +7,18 @@ mkcd() {
 }
 
 ## Search in history
-hist() {
+hg() {
   history | grep -i "$1"
 }
 
 ## Find file
 ff() {
   find . -type f -iname "*$1*" 2>/dev/null
+}
+
+## Find dir
+fd() {
+  find . -type d -iname "*$1*" 2>/dev/null
 }
 
 ## Search in files
@@ -53,14 +58,7 @@ bak() {
   cp "$1" "$1.bak"
 }
 
-## Go to parent directory of file
-goto() {
-  cd "$(dirname "$1")"
-}
-
-## Count lines of code in project
-cloc() {
-  find . -name "*.py" -o -name "*.js" -o -name "*.java" -o \
-          -name "*.cpp" -o -name "*.c" -o -name "*.h" -o \
-          -name "*.rb" -o -name "*.php" -o -name "*.go" | xargs wc -l
+## Show IP info (own IP or specified)
+ipa() {
+  curl -s "https://ifconfig.co/json?ip=$1" | jq 'del(.user_agent)'
 }

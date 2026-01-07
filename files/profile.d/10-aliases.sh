@@ -31,14 +31,6 @@ alias psg='ps aux | grep'
 alias mkdir='mkdir -pv'
 
 ## Network
-alias myip='curl -s ifconfig.me 2>/dev/null || echo "curl not available"'
+alias myip='curl -s ifconfig.me'
 alias ports='netstat -tulpn 2>/dev/null || ss -tulpn'
 alias ping='ping -c 5'
-
-## System update
-if [[ -f /usr/bin/apt ]]; then
-  alias update='sudo apt update'
-  alias upgrade='sudo apt upgrade -y'
-  alias autoremove='sudo apt autoremove -y'
-  alias install='sudo apt install'
-fi
