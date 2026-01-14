@@ -16,6 +16,7 @@ alias l='ls -CF'
 alias lsd='ls -l | grep "^d"'    # Directories only
 alias lt='ls -lath'              # Sort by time
 alias lr='ls -lR'                # Recursive
+alias cf='sed -e "/^\s*#/d" -e "/^\s*$/d" -e "/^\s*;/d"' # watch file without comments
 
 ## Navigation
 alias ..='cd ..'
