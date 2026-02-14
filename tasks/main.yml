@@ -1,8 +1,8 @@
 ---
 - name: common | Fail if distro is not supported
   ansible.builtin.fail:
-    msg: "Distribution '{{ ansible_distribution }}' is not supported. Supported: Debian, Ubuntu"
-  when: ansible_distribution not in ['Debian', 'Ubuntu']
+    msg: "Distribution '{{ ansible_facts['distribution'] }}' is not supported. Supported: Debian, Ubuntu"
+  when: ansible_facts['distribution'] not in ['Debian', 'Ubuntu']
 
 - name: common | Set hostname
   ansible.builtin.hostname:
@@ -42,7 +42,7 @@
     owner: root
     group: root
     mode: "0644"
-  when: common_profile_d
+  when: common_profile_d | bool
 
 - name: common | Backup original pam.d/sshd
   ansible.builtin.copy:
@@ -53,7 +53,7 @@
     group: root
     mode: "0644"
     force: false
-  when: common_pam_sshd
+  when: common_pam_sshd | bool
 
 - name: common | Deploy custom pam.d/sshd
   ansible.builtin.copy:
@@ -62,7 +62,7 @@
     owner: root
     group: root
     mode: "0644"
-  when: common_pam_sshd
+  when: common_pam_sshd | bool
 
 - name: common | Apply sysctl settings
   ansible.posix.sysctl:
