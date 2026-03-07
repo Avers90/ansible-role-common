@@ -47,6 +47,37 @@ common_sysctl:
   vm.swappiness: 10
 ```
 
+**Important:** `common_sysctl` is a dict. Ansible does **not merge dicts** across
+`group_vars` — a more specific group overrides less specific ones entirely.
+If you define `common_sysctl` in both `group_vars/all/` and `group_vars/component_vless/`,
+only the latter takes effect. Duplicate any shared parameters in every group that needs them.
+
+### VPN host sysctl (recommended for WireGuard and VLESS/Marzban hosts)
+
+```yaml
+common_sysctl:
+  # TCP congestion control — BBR reduces latency under load
+  net.ipv4.tcp_congestion_control: bbr
+  # Fair queue — prevents large flows from starving small packets (ping, ACK)
+  net.core.default_qdisc: fq_codel
+  # Do not reset cwnd after idle — avoids slow-start on reconnects
+  net.ipv4.tcp_slow_start_after_idle: 0
+  # MTU probing — handles PMTUD blackholes common in VPN tunnels
+  net.ipv4.tcp_mtu_probing: 1
+  # Large socket buffers — BBR needs BDP-sized buffers to reach full throughput
+  # at high RTT (e.g. 100Mbit × 50ms RTT = 625KB minimum)
+  net.core.rmem_max: 16777216
+  net.core.wmem_max: 16777216
+  net.ipv4.tcp_rmem: "4096 87380 16777216"
+  net.ipv4.tcp_wmem: "4096 65536 16777216"
+  # Limit unsent data in kernel send buffer — key fix for bufferbloat during
+  # large uploads through VPN (prevents ping from spiking 50ms → 1000ms)
+  net.ipv4.tcp_notsent_lowat: 131072
+
+  # WireGuard only — enables NAT packet forwarding between interfaces
+  # net.ipv4.ip_forward: 1
+```
+
 ### Disable profile.d deployment
 
 ```yaml
