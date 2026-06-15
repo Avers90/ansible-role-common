@@ -4,7 +4,7 @@ Common system configuration: hostname, timezone, locale, profile.d scripts, PAM.
 
 ## Requirements
 
-- Debian/Ubuntu
+- Debian (bullseye, bookworm), Ubuntu (focal, jammy, noble, resolute)
 - Collection: `ansible.posix`
 
 ## Role Variables
