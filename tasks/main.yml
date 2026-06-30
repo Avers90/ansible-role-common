@@ -20,6 +20,12 @@
   ansible.builtin.timezone:
     name: "{{ common_timezone }}"
 
+- name: common | Ensure locales package is installed
+  ansible.builtin.apt:
+    name: locales
+    state: present
+    update_cache: true
+
 - name: common | Set locale
   ansible.builtin.locale_gen:
     name: "{{ common_locale }}"

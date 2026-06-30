@@ -10,7 +10,7 @@ alias mv='mv -i'
 set -o noclobber
 
 ## Notify about failed login attempts
-if [[ -n "$SSH_CLIENT" && -n "$PS1" ]]; then
+if [[ -n "$SSH_CLIENT" && -n "$PS1" ]] && command -v last >/dev/null 2>&1; then
   echo ""
   echo "Last login: $(last -2 "$USER" | head -2 | tail -1 | awk '{print $4" "$5" "$6" "$7}')"
   echo ""
