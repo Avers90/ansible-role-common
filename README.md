@@ -74,6 +74,10 @@ Two details worth knowing:
 - **Filename.** Debian/Ubuntu ship `/etc/sysctl.d/99-sysctl.conf` as a symlink to
   `/etc/sysctl.conf`. `99-zz-ansible.conf` sorts after it, so the managed file wins
   even if a key is re-added to `/etc/sysctl.conf` by hand.
+- **Runtime vs. configured state.** Removing a key removes it from the file, so the host
+  boots with the kernel default. It does **not** reset the value in the running kernel —
+  `sysctl --system` only applies what the files contain, it cannot know what to revert to.
+  Reboot, or reset the value by hand, if the change must take effect immediately.
 
 Setting `common_sysctl: {}` removes the managed file entirely.
 
