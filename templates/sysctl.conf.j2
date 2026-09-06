@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+#
+# Rendered in full from the `common_sysctl` variable on every run.
+# Removing a key from the inventory removes it from this host — do not edit
+# by hand, and do not add keys to /etc/sysctl.conf (they are migrated out).
+#
+# Keys are emitted in inventory order, so the author controls apply order
+# for parameters where it matters (e.g. a *_default that must not exceed
+# a *_max set in the same pass).
+{% for key, value in common_sysctl.items() %}
+{{ key }} = {{ value }}
+{% endfor %}

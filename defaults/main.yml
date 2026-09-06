@@ -29,6 +29,14 @@ common_modules_load: []
 #  - nf_conntrack
 
 # Sysctl settings
+# Rendered in full into common_sysctl_file — this is declarative: a key removed
+# from here is removed from the host. Managed keys are also migrated out of
+# /etc/sysctl.conf so there is exactly one source of truth.
 common_sysctl: {}
 #  net.ipv4.ip_forward: 1
 #  vm.swappiness: 10
+
+# Destination for the rendered sysctl file.
+# Sorts after Debian/Ubuntu's 99-sysctl.conf (a symlink to /etc/sysctl.conf),
+# so this file wins even if a managed key is re-added there by hand.
+common_sysctl_file: /etc/sysctl.d/99-zz-ansible.conf

@@ -5,7 +5,7 @@ Common system configuration: hostname, timezone, locale, profile.d scripts, PAM.
 ## Requirements
 
 - Debian (bullseye, bookworm), Ubuntu (focal, jammy, noble, resolute)
-- Collections: `ansible.posix`, `community.general`
+- Collection: `community.general`
 
 ## Role Variables
 
@@ -19,6 +19,7 @@ Common system configuration: hostname, timezone, locale, profile.d scripts, PAM.
 | `common_hosts_entries` | `[]` | Additional /etc/hosts entries |
 | `common_modules_load` | `[]` | Kernel modules to load and persist in `/etc/modules-load.d/` |
 | `common_sysctl` | `{}` | Sysctl kernel parameters |
+| `common_sysctl_file` | `/etc/sysctl.d/99-zz-ansible.conf` | Destination for the rendered sysctl file |
 
 ## Examples
 
@@ -52,6 +53,29 @@ common_sysctl:
 `group_vars` — a more specific group overrides less specific ones entirely.
 If you define `common_sysctl` in both `group_vars/all/` and `group_vars/component_vless/`,
 only the latter takes effect. Duplicate any shared parameters in every group that needs them.
+
+#### Declarative behaviour
+
+`common_sysctl` is rendered **in full** into `common_sysctl_file`
+(`/etc/sysctl.d/99-zz-ansible.conf` by default) on every run. Removing a key from
+the inventory removes it from the host — the variable describes the desired state,
+not a list of things ever added.
+
+Keys are emitted in inventory order, so you control apply order where it matters.
+
+Two details worth knowing:
+
+- **Migration.** Earlier versions of this role wrote into `/etc/sysctl.conf` via
+  `ansible.posix.sysctl`, which is additive only. The role now deletes every key
+  present in `common_sysctl` from `/etc/sysctl.conf` before rendering its own file,
+  so there is exactly one source of truth. Keys that were written there by an older
+  run and have since been dropped from the inventory are **not** cleaned up
+  automatically — the role cannot know they were ever managed. Remove those by hand.
+- **Filename.** Debian/Ubuntu ship `/etc/sysctl.d/99-sysctl.conf` as a symlink to
+  `/etc/sysctl.conf`. `99-zz-ansible.conf` sorts after it, so the managed file wins
+  even if a key is re-added to `/etc/sysctl.conf` by hand.
+
+Setting `common_sysctl: {}` removes the managed file entirely.
 
 ### Kernel modules
 
