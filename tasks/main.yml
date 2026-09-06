@@ -70,6 +70,14 @@
     mode: "0644"
   when: common_pam_sshd | bool
 
+- name: common | Load kernel modules and persist them across reboots
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+    persistent: present
+  loop: "{{ common_modules_load }}"
+  when: common_modules_load | length > 0
+
 - name: common | Apply sysctl settings
   ansible.posix.sysctl:
     name: "{{ item.key }}"

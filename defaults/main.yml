@@ -21,6 +21,13 @@ common_hosts_entries: []
 #    aliases:
 #      - db
 
+# Kernel modules to load at boot (/etc/modules-load.d/)
+# Required when common_sysctl contains keys owned by a module that is not
+# loaded before systemd-sysctl.service — e.g. net.netfilter.nf_conntrack_*.
+# Without this the values are silently dropped on every boot.
+common_modules_load: []
+#  - nf_conntrack
+
 # Sysctl settings
 common_sysctl: {}
 #  net.ipv4.ip_forward: 1

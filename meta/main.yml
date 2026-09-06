@@ -21,4 +21,4 @@ dependencies: []
 allow_duplicates: false
 
 # Required collections:
-#   ansible-galaxy collection install ansible.posix
+#   ansible-galaxy collection install ansible.posix community.general
