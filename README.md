@@ -195,7 +195,7 @@ common_pam_sshd: false
 - `00-bash-options.sh` - Bash options
 - `10-aliases.sh` - Common aliases
 - `20-functions.sh` - Helper functions
-- `30-prompt.sh` - Custom prompt
+- `30-prompt.sh` - Custom prompt: `[user@host|<all public IPv4, primary first>]` (RFC1918/CGNAT/VPN 10.x and IPv6 hidden)
 - `40-history.sh` - History settings
 - `50-colors.sh` - Colors
 - `60-path.sh` - PATH configuration
