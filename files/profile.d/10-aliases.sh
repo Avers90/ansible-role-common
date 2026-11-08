@@ -34,5 +34,8 @@ alias mkdir='mkdir -pv'
 ## Network
 alias myip='curl -s -4 ifconfig.me'
 alias myip6='curl -s -6 ifconfig.me'
+alias ipa='ip -c -br a'          # All addresses per interface, brief
+alias ipa4='ip -c -br -4 a'      # IPv4 only
+alias ipa6='ip -c -br -6 a'      # IPv6 only
 alias ports='netstat -tulpn 2>/dev/null || ss -tulpn'
 alias ping='ping -c 5'
